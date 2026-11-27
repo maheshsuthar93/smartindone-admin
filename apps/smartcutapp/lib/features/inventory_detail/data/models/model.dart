@@ -1,0 +1,1 @@
+export 'package_model.dart';

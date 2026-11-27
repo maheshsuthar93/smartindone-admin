@@ -1,0 +1,7 @@
+# OS and IDE files at the repository root
+.DS_Store
+*.iml
+.idea/
+
+# Generated example output
+/output/pdf/*.pdf

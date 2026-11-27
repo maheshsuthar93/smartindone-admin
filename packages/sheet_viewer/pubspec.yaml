@@ -1,0 +1,28 @@
+
+name: sheet_viewer
+description: A professional Flutter package for interactive furniture sheet visualization and optimization.
+version: 1.0.0
+
+homepage: https://github.com/yourusername/sheet_viewer
+repository: https://github.com/yourusername/sheet_viewer
+issue_tracker: https://github.com/yourusername/sheet_viewer/issues
+
+environment:
+  sdk: ^3.13.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  freezed: ^4.0.2
+  json_serializable: ^6.7.1
+
+  freezed_annotation: ^3.1.0
+  characters: ^1.4.1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
