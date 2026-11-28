@@ -10,6 +10,7 @@ abstract class AvailablePackagePieceModel with _$AvailablePackagePieceModel {
   const factory AvailablePackagePieceModel({
     required String id,
     required String pieceCode,
+    @Default('PENDING') String status,
     int? pieceNumber,
     @Default(0) num width,
     @Default(0) num height,

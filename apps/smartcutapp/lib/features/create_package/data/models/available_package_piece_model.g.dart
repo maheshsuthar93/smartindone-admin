@@ -11,6 +11,7 @@ _AvailablePackagePieceModel _$AvailablePackagePieceModelFromJson(
 ) => _AvailablePackagePieceModel(
   id: json['id'] as String,
   pieceCode: json['pieceCode'] as String,
+  status: json['status'] as String? ?? 'PENDING',
   pieceNumber: (json['pieceNumber'] as num?)?.toInt(),
   width: json['width'] as num? ?? 0,
   height: json['height'] as num? ?? 0,
@@ -27,6 +28,7 @@ Map<String, dynamic> _$AvailablePackagePieceModelToJson(
 ) => <String, dynamic>{
   'id': instance.id,
   'pieceCode': instance.pieceCode,
+  'status': instance.status,
   'pieceNumber': instance.pieceNumber,
   'width': instance.width,
   'height': instance.height,

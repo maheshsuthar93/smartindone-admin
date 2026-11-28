@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AvailablePackagePieceModel {
 
- String get id; String get pieceCode; int? get pieceNumber; num get width; num get height; num get thickness; String? get barcode; String? get qrCode; PackagePiecePartModel? get part;
+ String get id; String get pieceCode; String get status; int? get pieceNumber; num get width; num get height; num get thickness; String? get barcode; String? get qrCode; PackagePiecePartModel? get part;
 /// Create a copy of AvailablePackagePieceModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $AvailablePackagePieceModelCopyWith<AvailablePackagePieceModel> get copyWith => 
 @override
 bool operator ==(Object other) {
   final _this = this as AvailablePackagePieceModel;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AvailablePackagePieceModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.pieceCode, _this.pieceCode) || other.pieceCode == _this.pieceCode)&&(identical(other.pieceNumber, _this.pieceNumber) || other.pieceNumber == _this.pieceNumber)&&(identical(other.width, _this.width) || other.width == _this.width)&&(identical(other.height, _this.height) || other.height == _this.height)&&(identical(other.thickness, _this.thickness) || other.thickness == _this.thickness)&&(identical(other.barcode, _this.barcode) || other.barcode == _this.barcode)&&(identical(other.qrCode, _this.qrCode) || other.qrCode == _this.qrCode)&&(identical(other.part, _this.part) || other.part == _this.part));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AvailablePackagePieceModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.pieceCode, _this.pieceCode) || other.pieceCode == _this.pieceCode)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.pieceNumber, _this.pieceNumber) || other.pieceNumber == _this.pieceNumber)&&(identical(other.width, _this.width) || other.width == _this.width)&&(identical(other.height, _this.height) || other.height == _this.height)&&(identical(other.thickness, _this.thickness) || other.thickness == _this.thickness)&&(identical(other.barcode, _this.barcode) || other.barcode == _this.barcode)&&(identical(other.qrCode, _this.qrCode) || other.qrCode == _this.qrCode)&&(identical(other.part, _this.part) || other.part == _this.part));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as AvailablePackagePieceModel;
-  return Object.hash(runtimeType,_this.id,_this.pieceCode,_this.pieceNumber,_this.width,_this.height,_this.thickness,_this.barcode,_this.qrCode,_this.part);
+  return Object.hash(runtimeType,_this.id,_this.pieceCode,_this.status,_this.pieceNumber,_this.width,_this.height,_this.thickness,_this.barcode,_this.qrCode,_this.part);
 }
 
 @override
 String toString() {
   final _this = this as AvailablePackagePieceModel;
-  return 'AvailablePackagePieceModel(id: ${_this.id}, pieceCode: ${_this.pieceCode}, pieceNumber: ${_this.pieceNumber}, width: ${_this.width}, height: ${_this.height}, thickness: ${_this.thickness}, barcode: ${_this.barcode}, qrCode: ${_this.qrCode}, part: ${_this.part})';
+  return 'AvailablePackagePieceModel(id: ${_this.id}, pieceCode: ${_this.pieceCode}, status: ${_this.status}, pieceNumber: ${_this.pieceNumber}, width: ${_this.width}, height: ${_this.height}, thickness: ${_this.thickness}, barcode: ${_this.barcode}, qrCode: ${_this.qrCode}, part: ${_this.part})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $AvailablePackagePieceModelCopyWith<$Res>  {
   factory $AvailablePackagePieceModelCopyWith(AvailablePackagePieceModel value, $Res Function(AvailablePackagePieceModel) _then) = _$AvailablePackagePieceModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String pieceCode, int? pieceNumber, num width, num height, num thickness, String? barcode, String? qrCode, PackagePiecePartModel? part
+ String id, String pieceCode, String status, int? pieceNumber, num width, num height, num thickness, String? barcode, String? qrCode, PackagePiecePartModel? part
 });
 
 
@@ -71,10 +71,11 @@ class _$AvailablePackagePieceModelCopyWithImpl<$Res>
 
 /// Create a copy of AvailablePackagePieceModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? pieceCode = null,Object? pieceNumber = freezed,Object? width = null,Object? height = null,Object? thickness = null,Object? barcode = freezed,Object? qrCode = freezed,Object? part = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? pieceCode = null,Object? status = null,Object? pieceNumber = freezed,Object? width = null,Object? height = null,Object? thickness = null,Object? barcode = freezed,Object? qrCode = freezed,Object? part = freezed,}) {
   return _then(AvailablePackagePieceModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,pieceCode: null == pieceCode ? _self.pieceCode : pieceCode // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,pieceNumber: freezed == pieceNumber ? _self.pieceNumber : pieceNumber // ignore: cast_nullable_to_non_nullable
 as int?,width: null == width ? _self.width : width // ignore: cast_nullable_to_non_nullable
 as num,height: null == height ? _self.height : height // ignore: cast_nullable_to_non_nullable
@@ -179,10 +180,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String pieceCode,  int? pieceNumber,  num width,  num height,  num thickness,  String? barcode,  String? qrCode,  PackagePiecePartModel? part)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String pieceCode,  String status,  int? pieceNumber,  num width,  num height,  num thickness,  String? barcode,  String? qrCode,  PackagePiecePartModel? part)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AvailablePackagePieceModel() when $default != null:
-return $default(_that.id,_that.pieceCode,_that.pieceNumber,_that.width,_that.height,_that.thickness,_that.barcode,_that.qrCode,_that.part);case _:
+return $default(_that.id,_that.pieceCode,_that.status,_that.pieceNumber,_that.width,_that.height,_that.thickness,_that.barcode,_that.qrCode,_that.part);case _:
   return orElse();
 
 }
@@ -200,10 +201,10 @@ return $default(_that.id,_that.pieceCode,_that.pieceNumber,_that.width,_that.hei
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String pieceCode,  int? pieceNumber,  num width,  num height,  num thickness,  String? barcode,  String? qrCode,  PackagePiecePartModel? part)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String pieceCode,  String status,  int? pieceNumber,  num width,  num height,  num thickness,  String? barcode,  String? qrCode,  PackagePiecePartModel? part)  $default,) {final _that = this;
 switch (_that) {
 case _AvailablePackagePieceModel():
-return $default(_that.id,_that.pieceCode,_that.pieceNumber,_that.width,_that.height,_that.thickness,_that.barcode,_that.qrCode,_that.part);case _:
+return $default(_that.id,_that.pieceCode,_that.status,_that.pieceNumber,_that.width,_that.height,_that.thickness,_that.barcode,_that.qrCode,_that.part);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -220,10 +221,10 @@ return $default(_that.id,_that.pieceCode,_that.pieceNumber,_that.width,_that.hei
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String pieceCode,  int? pieceNumber,  num width,  num height,  num thickness,  String? barcode,  String? qrCode,  PackagePiecePartModel? part)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String pieceCode,  String status,  int? pieceNumber,  num width,  num height,  num thickness,  String? barcode,  String? qrCode,  PackagePiecePartModel? part)?  $default,) {final _that = this;
 switch (_that) {
 case _AvailablePackagePieceModel() when $default != null:
-return $default(_that.id,_that.pieceCode,_that.pieceNumber,_that.width,_that.height,_that.thickness,_that.barcode,_that.qrCode,_that.part);case _:
+return $default(_that.id,_that.pieceCode,_that.status,_that.pieceNumber,_that.width,_that.height,_that.thickness,_that.barcode,_that.qrCode,_that.part);case _:
   return null;
 
 }
@@ -235,11 +236,12 @@ return $default(_that.id,_that.pieceCode,_that.pieceNumber,_that.width,_that.hei
 @JsonSerializable()
 
 class _AvailablePackagePieceModel extends AvailablePackagePieceModel {
-  const _AvailablePackagePieceModel({required this.id, required this.pieceCode, this.pieceNumber, this.width = 0, this.height = 0, this.thickness = 0, this.barcode, this.qrCode, this.part}): super._();
+  const _AvailablePackagePieceModel({required this.id, required this.pieceCode, this.status = 'PENDING', this.pieceNumber, this.width = 0, this.height = 0, this.thickness = 0, this.barcode, this.qrCode, this.part}): super._();
   factory _AvailablePackagePieceModel.fromJson(Map<String, dynamic> json) => _$AvailablePackagePieceModelFromJson(json);
 
 @override final  String id;
 @override final  String pieceCode;
+@override@JsonKey() final  String status;
 @override final  int? pieceNumber;
 @override@JsonKey() final  num width;
 @override@JsonKey() final  num height;
@@ -261,18 +263,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AvailablePackagePieceModel&&(identical(other.id, id) || other.id == id)&&(identical(other.pieceCode, pieceCode) || other.pieceCode == pieceCode)&&(identical(other.pieceNumber, pieceNumber) || other.pieceNumber == pieceNumber)&&(identical(other.width, width) || other.width == width)&&(identical(other.height, height) || other.height == height)&&(identical(other.thickness, thickness) || other.thickness == thickness)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.qrCode, qrCode) || other.qrCode == qrCode)&&(identical(other.part, part) || other.part == part));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AvailablePackagePieceModel&&(identical(other.id, id) || other.id == id)&&(identical(other.pieceCode, pieceCode) || other.pieceCode == pieceCode)&&(identical(other.status, status) || other.status == status)&&(identical(other.pieceNumber, pieceNumber) || other.pieceNumber == pieceNumber)&&(identical(other.width, width) || other.width == width)&&(identical(other.height, height) || other.height == height)&&(identical(other.thickness, thickness) || other.thickness == thickness)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.qrCode, qrCode) || other.qrCode == qrCode)&&(identical(other.part, part) || other.part == part));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,pieceCode,pieceNumber,width,height,thickness,barcode,qrCode,part);
+    return Object.hash(runtimeType,id,pieceCode,status,pieceNumber,width,height,thickness,barcode,qrCode,part);
 }
 
 @override
 String toString() {
-    return 'AvailablePackagePieceModel(id: $id, pieceCode: $pieceCode, pieceNumber: $pieceNumber, width: $width, height: $height, thickness: $thickness, barcode: $barcode, qrCode: $qrCode, part: $part)';
+    return 'AvailablePackagePieceModel(id: $id, pieceCode: $pieceCode, status: $status, pieceNumber: $pieceNumber, width: $width, height: $height, thickness: $thickness, barcode: $barcode, qrCode: $qrCode, part: $part)';
 }
 
 
@@ -283,7 +285,7 @@ abstract mixin class _$AvailablePackagePieceModelCopyWith<$Res> implements $Avai
   factory _$AvailablePackagePieceModelCopyWith(_AvailablePackagePieceModel value, $Res Function(_AvailablePackagePieceModel) _then) = __$AvailablePackagePieceModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String pieceCode, int? pieceNumber, num width, num height, num thickness, String? barcode, String? qrCode, PackagePiecePartModel? part
+ String id, String pieceCode, String status, int? pieceNumber, num width, num height, num thickness, String? barcode, String? qrCode, PackagePiecePartModel? part
 });
 
 
@@ -300,10 +302,11 @@ class __$AvailablePackagePieceModelCopyWithImpl<$Res>
 
 /// Create a copy of AvailablePackagePieceModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? pieceCode = null,Object? pieceNumber = freezed,Object? width = null,Object? height = null,Object? thickness = null,Object? barcode = freezed,Object? qrCode = freezed,Object? part = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? pieceCode = null,Object? status = null,Object? pieceNumber = freezed,Object? width = null,Object? height = null,Object? thickness = null,Object? barcode = freezed,Object? qrCode = freezed,Object? part = freezed,}) {
   return _then(_AvailablePackagePieceModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,pieceCode: null == pieceCode ? _self.pieceCode : pieceCode // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,pieceNumber: freezed == pieceNumber ? _self.pieceNumber : pieceNumber // ignore: cast_nullable_to_non_nullable
 as int?,width: null == width ? _self.width : width // ignore: cast_nullable_to_non_nullable
 as num,height: null == height ? _self.height : height // ignore: cast_nullable_to_non_nullable

@@ -16,12 +16,16 @@ class HardwareSection extends StatefulWidget {
     required this.isLoading,
     required this.hasWarehouse,
     this.searchQuery = '',
+    this.selectedQuantities = const {},
+    required this.onSelectionChanged,
   });
 
   final List<AvailablePackageHardwareModel> hardware;
   final bool isLoading;
   final bool hasWarehouse;
   final String searchQuery;
+  final Map<String, int> selectedQuantities;
+  final ValueChanged<Map<String, int>> onSelectionChanged;
 
   @override
   State<HardwareSection> createState() => _HardwareSectionState();
@@ -37,6 +41,8 @@ class _HardwareSectionState extends State<HardwareSection> {
       context: context,
       hardware: widget.hardware,
       searchQuery: widget.searchQuery,
+      selectedQuantities: widget.selectedQuantities,
+      onSelectionChanged: widget.onSelectionChanged,
     );
   }
 
@@ -157,12 +163,15 @@ class PackageHardwareSelectionDataSource extends DataTableSource {
     required this.hardware,
     this.searchQuery = '',
     required this.context,
-  });
+    Map<String, int> selectedQuantities = const {},
+    required this.onSelectionChanged,
+  }) : _selectedQuantitiesByHardwareId = Map.of(selectedQuantities);
 
   List<AvailablePackageHardwareModel> hardware;
   String searchQuery;
-  final Map<String, int> _selectedQuantitiesByHardwareId = {};
+  final Map<String, int> _selectedQuantitiesByHardwareId;
   final BuildContext context;
+  final ValueChanged<Map<String, int>> onSelectionChanged;
 
   List<AvailablePackageHardwareModel> get visibleHardware {
     if (searchQuery.isEmpty) return hardware;
@@ -196,6 +205,7 @@ class PackageHardwareSelectionDataSource extends DataTableSource {
     } else {
       _selectedQuantitiesByHardwareId[item.id] = clampedQuantity;
     }
+    onSelectionChanged(Map.unmodifiable(_selectedQuantitiesByHardwareId));
     notifyListeners();
   }
 

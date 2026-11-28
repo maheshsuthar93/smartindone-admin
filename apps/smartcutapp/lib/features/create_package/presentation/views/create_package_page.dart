@@ -32,12 +32,10 @@ class CreatePackagePage extends BaseStatefulScreen {
 class _CreatePackagePageState extends BaseState<CreatePackagePage> {
   late final PackageViewModel _viewModel;
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
   final _contentSearchController = TextEditingController();
-  String _status = 'PACKING';
-  bool _isInitialized = false;
   WarehouseModel? _selectedWarehouse;
   String _contentSearchQuery = '';
+  final Map<String, int> _selectedHardwareQuantities = {};
 
   late final PackagePieceDataSource _pieceDataSource;
 
@@ -66,13 +64,6 @@ class _CreatePackagePageState extends BaseState<CreatePackagePage> {
       value: _viewModel,
       child: Consumer<PackageViewModel>(
         builder: (context, viewModel, child) {
-          if (!viewModel.isLoading &&
-              !_isInitialized &&
-              viewModel.package != null) {
-            _nameController.text = viewModel.package!.name;
-            _status = viewModel.package!.status;
-            _isInitialized = true;
-          }
           if (viewModel.error != null) {
             final message = viewModel.error!;
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -121,15 +112,36 @@ class _CreatePackagePageState extends BaseState<CreatePackagePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         spacing: 10,
         children: [
-          Row(
-            spacing: 10,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(child: _statusField),
-              if (_selectedTab == PackageTab.hardware)
-                Expanded(child: _warehouseField),
-              Expanded(child: _contentSearchField),
-            ],
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final narrow = constraints.maxWidth < 650;
+              final fields = <Widget>[
+                if (_selectedTab == PackageTab.hardware) _warehouseField,
+                _contentSearchField,
+              ];
+              if (narrow) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (_selectedTab == PackageTab.hardware) _warehouseField,
+                    _contentSearchField,
+                  ],
+                );
+              }
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: fields
+                    .map(
+                      (field) => Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: field,
+                        ),
+                      ),
+                    )
+                    .toList(),
+              );
+            },
           ),
           const SizedBox(height: 10),
           Row(
@@ -183,24 +195,29 @@ class _CreatePackagePageState extends BaseState<CreatePackagePage> {
                     isLoading: _viewModel.isHardwareLoading,
                     hasWarehouse: _selectedWarehouse != null,
                     searchQuery: _contentSearchQuery,
+                    selectedQuantities: _selectedHardwareQuantities,
+                    onSelectionChanged: (quantities) {
+                      _selectedHardwareQuantities
+                        ..clear()
+                        ..addAll(quantities);
+                    },
                   ),
           ),
           Align(
             alignment: Alignment.centerRight,
-            child: Row(
+            child: Wrap(
               spacing: 10,
-              mainAxisSize: MainAxisSize.min,
+              runSpacing: 10,
+              alignment: WrapAlignment.end,
               children: [
                 SizedBox(
-                  width: 200,
+                  width: 160,
                   child: ButtonWidget.secondary(
                     label: 'Cancel',
-                    onPressed: () {
-                      router.pop();
-                    },
+                    onPressed: router.pop,
                   ),
                 ),
-                SizedBox(width: 200, child: _buildCreateButton),
+                SizedBox(width: 180, child: _buildCreateButton),
               ],
             ),
           ),
@@ -216,12 +233,26 @@ class _CreatePackagePageState extends BaseState<CreatePackagePage> {
 
   Future<void> _savePackage() async {
     if (!_formKey.currentState!.validate()) return;
+    final pieceIds = _selectedTab == PackageTab.pieces
+        ? _pieceDataSource.selectedPieceIds.toList()
+        : <String>[];
+    final hardwareItems = _selectedTab == PackageTab.hardware
+        ? _selectedHardwareQuantities.entries
+              .where((entry) => entry.value > 0)
+              .map(
+                (entry) => {'hardwareId': entry.key, 'quantity': entry.value},
+              )
+              .toList()
+        : <Map<String, dynamic>>[];
     final isSaved = await _viewModel.save(
       packageId: widget.packageId,
       data: {
-        'name': _nameController.text.trim(),
-        'status': _status,
+        'orderId': widget.orderId,
         'shipmentId': widget.shipmentId,
+        if (widget.packageId == null) ...{
+          'pieceIds': pieceIds,
+          'hardwareItems': hardwareItems,
+        },
       },
     );
     if (!mounted) return;
@@ -233,30 +264,6 @@ class _CreatePackagePageState extends BaseState<CreatePackagePage> {
       );
     }
   }
-
-  Widget get _statusField => _buildAutoCompleteField(
-    labelText: 'Status',
-    options: const ['PACKING', 'PACKED', 'LOADED'],
-    initialValue: _status,
-    hintText: 'Select status',
-    displayStringForOption: (status) => status,
-    onSelected: (value) {
-      setState(() => _status = value);
-    },
-    onChanged: (value) {
-      if (value != _status) setState(() => _status = '');
-    },
-    filterFn: (value, query) {
-      return value.toLowerCase().contains(query);
-    },
-    isRequired: true,
-    validator: (_) => _status.isEmpty ? 'Select a status' : null,
-    prefixIcon: const Icon(
-      Icons.search,
-      color: AppColors.textFieldIcon,
-      size: 20,
-    ),
-  );
 
   Widget get _contentSearchField => _buildTextFormField(
     hintText: 'Search pieces or hardware...',
@@ -291,7 +298,10 @@ class _CreatePackagePageState extends BaseState<CreatePackagePage> {
 
   void _onWarehouseSelected(WarehouseModel warehouse) {
     if (!mounted) return;
-    setState(() => _selectedWarehouse = warehouse);
+    setState(() {
+      _selectedWarehouse = warehouse;
+      _selectedHardwareQuantities.clear();
+    });
     _viewModel.fetchAvailableHardware(warehouse.id);
   }
 
@@ -359,7 +369,6 @@ class _CreatePackagePageState extends BaseState<CreatePackagePage> {
   void dispose() {
     super.dispose();
     _deliveryDateController.dispose();
-    _nameController.dispose();
     _contentSearchController.dispose();
     _viewModel.dispose();
   }
@@ -382,6 +391,7 @@ class _CreatePackagePageState extends BaseState<CreatePackagePage> {
         ),
         //DataColumn(label: TableHeader(label: "QUANTITY")),
         DataColumn(label: TableHeader(label: "DIMENSION")),
+        DataColumn(label: TableHeader(label: "STATUS")),
         // DataColumn(label: _tableHeader("EDGE BANDING")),
         //DataColumn(label: _tableHeader("MULTI BORING")),
         //DataColumn(label: _tableHeader("GRAIN")),
@@ -519,6 +529,7 @@ class PackagePieceDataSource extends DataTableSource {
 
         //DataCell(Text(data['quantity'])),
         DataCell(TableValue(label: piece.dimension)),
+        DataCell(_pieceStatus(piece.status)),
         // DataCell(Text('Completed')),
         // DataCell(Text('Completed')),
         // DataCell(Text(data['grain'])),
@@ -552,6 +563,7 @@ class PackagePieceDataSource extends DataTableSource {
         piece.itemLabel,
         piece.itemName,
         piece.dimension,
+        piece.status,
         piece.partNumber?.toString() ?? '',
         piece.barcode ?? '',
         piece.qrCode ?? '',
@@ -589,4 +601,30 @@ class PackagePieceDataSource extends DataTableSource {
   int get totalPieceCount => _allPieces.length;
 
   int get availablePieceCount => totalPieceCount - selectedPieceCount;
+}
+
+Widget _pieceStatus(String status) {
+  final color = switch (status) {
+    'COMPLETED' => AppColors.successColor,
+    'IN_PROGRESS' => AppColors.primaryColor,
+    'FAILED' => AppColors.errorColor,
+    _ => AppColors.warningColor,
+  };
+  final label = status
+      .toLowerCase()
+      .split('_')
+      .map((word) => '${word[0].toUpperCase()}${word.substring(1)}')
+      .join(' ');
+
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+    decoration: BoxDecoration(
+      color: color.withAlpha(24),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Text(
+      label,
+      style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600),
+    ),
+  );
 }
