@@ -39,6 +39,7 @@ class LayoutViewViewModel extends ChangeNotifier {
   OptimizationSheetModel? _selectedSheet;
 
   List<OptimizationProcessType> get processTypes => _processTypes;
+
   OptimizationSheetModel? get selectedSheet => _selectedSheet;
   String? selectedLayoutId;
 
@@ -59,6 +60,7 @@ class LayoutViewViewModel extends ChangeNotifier {
   OptimizationMaterialGroupModel? get materialGroup => _materialGroup;
 
   bool get isLoading => _isLoading;
+
   bool get isUpdatingLayout => _isUpdatingLayout;
 
   Future<void> fetchMaterialGroupById({bool showLoading = true}) async {
@@ -94,9 +96,6 @@ class LayoutViewViewModel extends ChangeNotifier {
                 orElse: () => selectedLayout.sheets.first,
               );
             }
-          }
-          if (showLoading) {
-            _showToast('Optimization layouts loaded successfully.');
           }
         },
       );
