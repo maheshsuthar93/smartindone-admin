@@ -633,7 +633,7 @@ class WarehouseDetailPageRoute extends GoRouteData
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const WarehouseDetailPage();
+    return WarehouseDetailPage(warehouseId: warehouseId);
   }
 }
 

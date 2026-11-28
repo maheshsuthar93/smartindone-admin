@@ -17,6 +17,13 @@ _WarehouseModel _$WarehouseModelFromJson(Map<String, dynamic> json) =>
       contactEmail: json['contactEmail'] as String?,
       contactPhone: json['contactPhone'] as String?,
       status: $enumDecode(_$WarehouseStatusEnumMap, json['status']),
+      factoryName: _readFactoryName(json, 'factoryName') as String? ?? '',
+      factoryCode: _readFactoryCode(json, 'factoryCode') as String?,
+      inventoryBalanceCount:
+          (_readInventoryBalanceCount(json, 'inventoryBalanceCount') as num?)
+              ?.toInt() ??
+          0,
+      sheetCount: (_readSheetCount(json, 'sheetCount') as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$WarehouseModelToJson(_WarehouseModel instance) =>

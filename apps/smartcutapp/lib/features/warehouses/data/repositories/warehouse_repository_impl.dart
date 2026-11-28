@@ -26,6 +26,13 @@ class WarehouseRepositoryImpl implements WarehouseRepository {
   }
 
   @override
+  Future<Either<Failure, WarehouseModel>> getWarehouseById({
+    required String warehouseId,
+  }) => safeCall(
+    () => remoteDataSource.getWarehouseById(warehouseId: warehouseId),
+  );
+
+  @override
   Future<Either<Failure, ApiResponse>> updateWarehouse({
     required String warehouseId,
     required Map<String, dynamic> data,

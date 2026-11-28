@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$WarehouseModel {
 
- String get id; String get companyId; String get factoryId; String? get location; String get name; String? get contactName; String? get contactEmail; String? get contactPhone; WarehouseStatus get status;
+ String get id; String get companyId; String get factoryId; String? get location; String get name; String? get contactName; String? get contactEmail; String? get contactPhone; WarehouseStatus get status;@JsonKey(readValue: _readFactoryName, includeToJson: false) String get factoryName;@JsonKey(readValue: _readFactoryCode, includeToJson: false) String? get factoryCode;@JsonKey(readValue: _readInventoryBalanceCount, includeToJson: false) int get inventoryBalanceCount;@JsonKey(readValue: _readSheetCount, includeToJson: false) int get sheetCount;
 /// Create a copy of WarehouseModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $WarehouseModelCopyWith<WarehouseModel> get copyWith => _$WarehouseModelCopyWith
 @override
 bool operator ==(Object other) {
   final _this = this as WarehouseModel;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WarehouseModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.companyId, _this.companyId) || other.companyId == _this.companyId)&&(identical(other.factoryId, _this.factoryId) || other.factoryId == _this.factoryId)&&(identical(other.location, _this.location) || other.location == _this.location)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.contactName, _this.contactName) || other.contactName == _this.contactName)&&(identical(other.contactEmail, _this.contactEmail) || other.contactEmail == _this.contactEmail)&&(identical(other.contactPhone, _this.contactPhone) || other.contactPhone == _this.contactPhone)&&(identical(other.status, _this.status) || other.status == _this.status));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WarehouseModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.companyId, _this.companyId) || other.companyId == _this.companyId)&&(identical(other.factoryId, _this.factoryId) || other.factoryId == _this.factoryId)&&(identical(other.location, _this.location) || other.location == _this.location)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.contactName, _this.contactName) || other.contactName == _this.contactName)&&(identical(other.contactEmail, _this.contactEmail) || other.contactEmail == _this.contactEmail)&&(identical(other.contactPhone, _this.contactPhone) || other.contactPhone == _this.contactPhone)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.factoryName, _this.factoryName) || other.factoryName == _this.factoryName)&&(identical(other.factoryCode, _this.factoryCode) || other.factoryCode == _this.factoryCode)&&(identical(other.inventoryBalanceCount, _this.inventoryBalanceCount) || other.inventoryBalanceCount == _this.inventoryBalanceCount)&&(identical(other.sheetCount, _this.sheetCount) || other.sheetCount == _this.sheetCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as WarehouseModel;
-  return Object.hash(runtimeType,_this.id,_this.companyId,_this.factoryId,_this.location,_this.name,_this.contactName,_this.contactEmail,_this.contactPhone,_this.status);
+  return Object.hash(runtimeType,_this.id,_this.companyId,_this.factoryId,_this.location,_this.name,_this.contactName,_this.contactEmail,_this.contactPhone,_this.status,_this.factoryName,_this.factoryCode,_this.inventoryBalanceCount,_this.sheetCount);
 }
 
 @override
 String toString() {
   final _this = this as WarehouseModel;
-  return 'WarehouseModel(id: ${_this.id}, companyId: ${_this.companyId}, factoryId: ${_this.factoryId}, location: ${_this.location}, name: ${_this.name}, contactName: ${_this.contactName}, contactEmail: ${_this.contactEmail}, contactPhone: ${_this.contactPhone}, status: ${_this.status})';
+  return 'WarehouseModel(id: ${_this.id}, companyId: ${_this.companyId}, factoryId: ${_this.factoryId}, location: ${_this.location}, name: ${_this.name}, contactName: ${_this.contactName}, contactEmail: ${_this.contactEmail}, contactPhone: ${_this.contactPhone}, status: ${_this.status}, factoryName: ${_this.factoryName}, factoryCode: ${_this.factoryCode}, inventoryBalanceCount: ${_this.inventoryBalanceCount}, sheetCount: ${_this.sheetCount})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $WarehouseModelCopyWith<$Res>  {
   factory $WarehouseModelCopyWith(WarehouseModel value, $Res Function(WarehouseModel) _then) = _$WarehouseModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String companyId, String factoryId, String? location, String name, String? contactName, String? contactEmail, String? contactPhone, WarehouseStatus status
+ String id, String companyId, String factoryId, String? location, String name, String? contactName, String? contactEmail, String? contactPhone, WarehouseStatus status,@JsonKey(readValue: _readFactoryName, includeToJson: false) String factoryName,@JsonKey(readValue: _readFactoryCode, includeToJson: false) String? factoryCode,@JsonKey(readValue: _readInventoryBalanceCount, includeToJson: false) int inventoryBalanceCount,@JsonKey(readValue: _readSheetCount, includeToJson: false) int sheetCount
 });
 
 
@@ -71,7 +71,7 @@ class _$WarehouseModelCopyWithImpl<$Res>
 
 /// Create a copy of WarehouseModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? companyId = null,Object? factoryId = null,Object? location = freezed,Object? name = null,Object? contactName = freezed,Object? contactEmail = freezed,Object? contactPhone = freezed,Object? status = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? companyId = null,Object? factoryId = null,Object? location = freezed,Object? name = null,Object? contactName = freezed,Object? contactEmail = freezed,Object? contactPhone = freezed,Object? status = null,Object? factoryName = null,Object? factoryCode = freezed,Object? inventoryBalanceCount = null,Object? sheetCount = null,}) {
   return _then(WarehouseModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,companyId: null == companyId ? _self.companyId : companyId // ignore: cast_nullable_to_non_nullable
@@ -82,7 +82,11 @@ as String,contactName: freezed == contactName ? _self.contactName : contactName 
 as String?,contactEmail: freezed == contactEmail ? _self.contactEmail : contactEmail // ignore: cast_nullable_to_non_nullable
 as String?,contactPhone: freezed == contactPhone ? _self.contactPhone : contactPhone // ignore: cast_nullable_to_non_nullable
 as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as WarehouseStatus,
+as WarehouseStatus,factoryName: null == factoryName ? _self.factoryName : factoryName // ignore: cast_nullable_to_non_nullable
+as String,factoryCode: freezed == factoryCode ? _self.factoryCode : factoryCode // ignore: cast_nullable_to_non_nullable
+as String?,inventoryBalanceCount: null == inventoryBalanceCount ? _self.inventoryBalanceCount : inventoryBalanceCount // ignore: cast_nullable_to_non_nullable
+as int,sheetCount: null == sheetCount ? _self.sheetCount : sheetCount // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -167,10 +171,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String companyId,  String factoryId,  String? location,  String name,  String? contactName,  String? contactEmail,  String? contactPhone,  WarehouseStatus status)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String companyId,  String factoryId,  String? location,  String name,  String? contactName,  String? contactEmail,  String? contactPhone,  WarehouseStatus status, @JsonKey(readValue: _readFactoryName, includeToJson: false)  String factoryName, @JsonKey(readValue: _readFactoryCode, includeToJson: false)  String? factoryCode, @JsonKey(readValue: _readInventoryBalanceCount, includeToJson: false)  int inventoryBalanceCount, @JsonKey(readValue: _readSheetCount, includeToJson: false)  int sheetCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WarehouseModel() when $default != null:
-return $default(_that.id,_that.companyId,_that.factoryId,_that.location,_that.name,_that.contactName,_that.contactEmail,_that.contactPhone,_that.status);case _:
+return $default(_that.id,_that.companyId,_that.factoryId,_that.location,_that.name,_that.contactName,_that.contactEmail,_that.contactPhone,_that.status,_that.factoryName,_that.factoryCode,_that.inventoryBalanceCount,_that.sheetCount);case _:
   return orElse();
 
 }
@@ -188,10 +192,10 @@ return $default(_that.id,_that.companyId,_that.factoryId,_that.location,_that.na
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String companyId,  String factoryId,  String? location,  String name,  String? contactName,  String? contactEmail,  String? contactPhone,  WarehouseStatus status)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String companyId,  String factoryId,  String? location,  String name,  String? contactName,  String? contactEmail,  String? contactPhone,  WarehouseStatus status, @JsonKey(readValue: _readFactoryName, includeToJson: false)  String factoryName, @JsonKey(readValue: _readFactoryCode, includeToJson: false)  String? factoryCode, @JsonKey(readValue: _readInventoryBalanceCount, includeToJson: false)  int inventoryBalanceCount, @JsonKey(readValue: _readSheetCount, includeToJson: false)  int sheetCount)  $default,) {final _that = this;
 switch (_that) {
 case _WarehouseModel():
-return $default(_that.id,_that.companyId,_that.factoryId,_that.location,_that.name,_that.contactName,_that.contactEmail,_that.contactPhone,_that.status);case _:
+return $default(_that.id,_that.companyId,_that.factoryId,_that.location,_that.name,_that.contactName,_that.contactEmail,_that.contactPhone,_that.status,_that.factoryName,_that.factoryCode,_that.inventoryBalanceCount,_that.sheetCount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -208,10 +212,10 @@ return $default(_that.id,_that.companyId,_that.factoryId,_that.location,_that.na
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String companyId,  String factoryId,  String? location,  String name,  String? contactName,  String? contactEmail,  String? contactPhone,  WarehouseStatus status)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String companyId,  String factoryId,  String? location,  String name,  String? contactName,  String? contactEmail,  String? contactPhone,  WarehouseStatus status, @JsonKey(readValue: _readFactoryName, includeToJson: false)  String factoryName, @JsonKey(readValue: _readFactoryCode, includeToJson: false)  String? factoryCode, @JsonKey(readValue: _readInventoryBalanceCount, includeToJson: false)  int inventoryBalanceCount, @JsonKey(readValue: _readSheetCount, includeToJson: false)  int sheetCount)?  $default,) {final _that = this;
 switch (_that) {
 case _WarehouseModel() when $default != null:
-return $default(_that.id,_that.companyId,_that.factoryId,_that.location,_that.name,_that.contactName,_that.contactEmail,_that.contactPhone,_that.status);case _:
+return $default(_that.id,_that.companyId,_that.factoryId,_that.location,_that.name,_that.contactName,_that.contactEmail,_that.contactPhone,_that.status,_that.factoryName,_that.factoryCode,_that.inventoryBalanceCount,_that.sheetCount);case _:
   return null;
 
 }
@@ -223,7 +227,7 @@ return $default(_that.id,_that.companyId,_that.factoryId,_that.location,_that.na
 @JsonSerializable()
 
 class _WarehouseModel implements WarehouseModel {
-  const _WarehouseModel({required this.id, required this.companyId, required this.factoryId, this.location, required this.name, this.contactName, this.contactEmail, this.contactPhone, required this.status});
+  const _WarehouseModel({required this.id, required this.companyId, required this.factoryId, this.location, required this.name, this.contactName, this.contactEmail, this.contactPhone, required this.status, @JsonKey(readValue: _readFactoryName, includeToJson: false) this.factoryName = '', @JsonKey(readValue: _readFactoryCode, includeToJson: false) this.factoryCode, @JsonKey(readValue: _readInventoryBalanceCount, includeToJson: false) this.inventoryBalanceCount = 0, @JsonKey(readValue: _readSheetCount, includeToJson: false) this.sheetCount = 0});
   factory _WarehouseModel.fromJson(Map<String, dynamic> json) => _$WarehouseModelFromJson(json);
 
 @override final  String id;
@@ -235,6 +239,10 @@ class _WarehouseModel implements WarehouseModel {
 @override final  String? contactEmail;
 @override final  String? contactPhone;
 @override final  WarehouseStatus status;
+@override@JsonKey(readValue: _readFactoryName, includeToJson: false) final  String factoryName;
+@override@JsonKey(readValue: _readFactoryCode, includeToJson: false) final  String? factoryCode;
+@override@JsonKey(readValue: _readInventoryBalanceCount, includeToJson: false) final  int inventoryBalanceCount;
+@override@JsonKey(readValue: _readSheetCount, includeToJson: false) final  int sheetCount;
 
 /// Create a copy of WarehouseModel
 /// with the given fields replaced by the non-null parameter values.
@@ -249,18 +257,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _WarehouseModel&&(identical(other.id, id) || other.id == id)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&(identical(other.factoryId, factoryId) || other.factoryId == factoryId)&&(identical(other.location, location) || other.location == location)&&(identical(other.name, name) || other.name == name)&&(identical(other.contactName, contactName) || other.contactName == contactName)&&(identical(other.contactEmail, contactEmail) || other.contactEmail == contactEmail)&&(identical(other.contactPhone, contactPhone) || other.contactPhone == contactPhone)&&(identical(other.status, status) || other.status == status));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _WarehouseModel&&(identical(other.id, id) || other.id == id)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&(identical(other.factoryId, factoryId) || other.factoryId == factoryId)&&(identical(other.location, location) || other.location == location)&&(identical(other.name, name) || other.name == name)&&(identical(other.contactName, contactName) || other.contactName == contactName)&&(identical(other.contactEmail, contactEmail) || other.contactEmail == contactEmail)&&(identical(other.contactPhone, contactPhone) || other.contactPhone == contactPhone)&&(identical(other.status, status) || other.status == status)&&(identical(other.factoryName, factoryName) || other.factoryName == factoryName)&&(identical(other.factoryCode, factoryCode) || other.factoryCode == factoryCode)&&(identical(other.inventoryBalanceCount, inventoryBalanceCount) || other.inventoryBalanceCount == inventoryBalanceCount)&&(identical(other.sheetCount, sheetCount) || other.sheetCount == sheetCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,companyId,factoryId,location,name,contactName,contactEmail,contactPhone,status);
+    return Object.hash(runtimeType,id,companyId,factoryId,location,name,contactName,contactEmail,contactPhone,status,factoryName,factoryCode,inventoryBalanceCount,sheetCount);
 }
 
 @override
 String toString() {
-    return 'WarehouseModel(id: $id, companyId: $companyId, factoryId: $factoryId, location: $location, name: $name, contactName: $contactName, contactEmail: $contactEmail, contactPhone: $contactPhone, status: $status)';
+    return 'WarehouseModel(id: $id, companyId: $companyId, factoryId: $factoryId, location: $location, name: $name, contactName: $contactName, contactEmail: $contactEmail, contactPhone: $contactPhone, status: $status, factoryName: $factoryName, factoryCode: $factoryCode, inventoryBalanceCount: $inventoryBalanceCount, sheetCount: $sheetCount)';
 }
 
 
@@ -271,7 +279,7 @@ abstract mixin class _$WarehouseModelCopyWith<$Res> implements $WarehouseModelCo
   factory _$WarehouseModelCopyWith(_WarehouseModel value, $Res Function(_WarehouseModel) _then) = __$WarehouseModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String companyId, String factoryId, String? location, String name, String? contactName, String? contactEmail, String? contactPhone, WarehouseStatus status
+ String id, String companyId, String factoryId, String? location, String name, String? contactName, String? contactEmail, String? contactPhone, WarehouseStatus status,@JsonKey(readValue: _readFactoryName, includeToJson: false) String factoryName,@JsonKey(readValue: _readFactoryCode, includeToJson: false) String? factoryCode,@JsonKey(readValue: _readInventoryBalanceCount, includeToJson: false) int inventoryBalanceCount,@JsonKey(readValue: _readSheetCount, includeToJson: false) int sheetCount
 });
 
 
@@ -288,7 +296,7 @@ class __$WarehouseModelCopyWithImpl<$Res>
 
 /// Create a copy of WarehouseModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? companyId = null,Object? factoryId = null,Object? location = freezed,Object? name = null,Object? contactName = freezed,Object? contactEmail = freezed,Object? contactPhone = freezed,Object? status = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? companyId = null,Object? factoryId = null,Object? location = freezed,Object? name = null,Object? contactName = freezed,Object? contactEmail = freezed,Object? contactPhone = freezed,Object? status = null,Object? factoryName = null,Object? factoryCode = freezed,Object? inventoryBalanceCount = null,Object? sheetCount = null,}) {
   return _then(_WarehouseModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,companyId: null == companyId ? _self.companyId : companyId // ignore: cast_nullable_to_non_nullable
@@ -299,7 +307,11 @@ as String,contactName: freezed == contactName ? _self.contactName : contactName 
 as String?,contactEmail: freezed == contactEmail ? _self.contactEmail : contactEmail // ignore: cast_nullable_to_non_nullable
 as String?,contactPhone: freezed == contactPhone ? _self.contactPhone : contactPhone // ignore: cast_nullable_to_non_nullable
 as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as WarehouseStatus,
+as WarehouseStatus,factoryName: null == factoryName ? _self.factoryName : factoryName // ignore: cast_nullable_to_non_nullable
+as String,factoryCode: freezed == factoryCode ? _self.factoryCode : factoryCode // ignore: cast_nullable_to_non_nullable
+as String?,inventoryBalanceCount: null == inventoryBalanceCount ? _self.inventoryBalanceCount : inventoryBalanceCount // ignore: cast_nullable_to_non_nullable
+as int,sheetCount: null == sheetCount ? _self.sheetCount : sheetCount // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

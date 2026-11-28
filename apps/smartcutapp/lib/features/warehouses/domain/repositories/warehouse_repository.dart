@@ -13,6 +13,10 @@ abstract class WarehouseRepository {
     required int limit,
   });
 
+  Future<Either<Failure, WarehouseModel>> getWarehouseById({
+    required String warehouseId,
+  });
+
   Future<Either<Failure, ApiResponse>> updateWarehouse({
     required String warehouseId,
     required Map<String, dynamic> data,

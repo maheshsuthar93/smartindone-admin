@@ -1,333 +1,171 @@
 import 'package:board_cut/core/core.dart';
-import 'package:board_cut/gen/assets.gen.dart';
+import 'package:board_cut/core/core_injection.dart';
+import 'package:board_cut/features/warehouses/data/models/warehouse_model.dart';
+import 'package:board_cut/features/warehouses/domain/usecases/get_warehouse_by_id.dart';
 import 'package:board_cut/shared/shared.dart';
 import 'package:flutter/material.dart';
 
 class WarehouseDetailPage extends BaseStatefulScreen {
-  const WarehouseDetailPage({super.key});
+  const WarehouseDetailPage({super.key, required this.warehouseId});
+
+  final String warehouseId;
 
   @override
   BaseState<WarehouseDetailPage> createState() => _WarehouseDetailPageState();
 }
 
 class _WarehouseDetailPageState extends BaseState<WarehouseDetailPage> {
-  final Map<String, dynamic> orderDetail = {
-    'orderId': "O12345",
-    'customer': 'ABC',
-    'project': 'ABC',
-    'createdAt': '01-Jan-2025',
-    'deliveryDate': '01-Feb-2025',
-    'status': 'Completed',
-    'action': 'View',
-  };
-  final List<Map<String, dynamic>> orderItems = [
-    {
-      'itemId': "O12345",
-      'unit': 'Wardrobe',
-      'quantity': '10',
-      'dimension': '10X12',
-      'status': 'Completed',
-      'action': 'View',
-    },
-    {
-      'itemId': "O12345",
-      'unit': 'Living Room Shelf',
-      'quantity': '5',
-      'dimension': '10X12',
-      'status': 'Completed',
-      'action': 'View',
-    },
-    {
-      'itemId': "O12345",
-      'unit': 'Kitchen Cabinet',
-      'quantity': '8',
-      'dimension': '10X12',
-      'status': 'In Progress',
-      'action': 'View',
-    },
-  ];
+  final GetWarehouseById _getWarehouseById = sl<GetWarehouseById>();
+  WarehouseModel? _warehouse;
+  bool _isLoading = true;
+  String? _error;
 
   @override
   void initState() {
     super.initState();
+    _loadWarehouse();
+  }
+
+  Future<void> _loadWarehouse() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+    final result = await _getWarehouseById(warehouseId: widget.warehouseId);
+    if (!mounted) return;
+    result.match(
+      (failure) => _error = failure.message,
+      (warehouse) => _warehouse = warehouse,
+    );
+    setState(() => _isLoading = false);
   }
 
   @override
   Widget buildResponsive(BuildContext context, ScreenType screenType) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 5),
-            switch (screenType) {
-              ScreenType.mobile => _buildMobileLayout(),
-              ScreenType.tablet => _tabletInfoCard(),
-              ScreenType.desktop => _buildDesktopLayout(),
-            },
-          ],
-        ),
+      body: SafeArea(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _error != null
+            ? _errorView()
+            : _warehouse == null
+            ? _errorView(message: 'Warehouse not found.')
+            : _content(_warehouse!),
       ),
     );
   }
 
-  Widget _tabletInfoCard() {
-    return Column(
-      spacing: 10,
+  Widget _content(WarehouseModel warehouse) => SingleChildScrollView(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Card(
-          color: AppColors.surfaceColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSize.borderRadius),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 6,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // round rect image
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(AppSize.borderRadius),
-                      // Adjust the roundness here
-                      child: Image.asset(
-                        Assets.images.wh.path,
-                        width: 200,
-                        height: 160,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 10,
-                        children: [
-                          Row(
-                            spacing: 10,
-                            children: [
-                              _header("Ahmedabad main Warehouse"),
-                              _status('Active'),
-                            ],
-                          ),
-                          Row(
-                            spacing: 10,
-                            children: [
-                              _infoRow(Icons.person, "MR. Patel"),
-                              _infoRow(Icons.phone_outlined, "+91 9876543210"),
-                            ],
-                          ),
-                          _infoRow(Icons.email_outlined, "abc@gmail.com"),
-
-                          // address info row
-                          _infoRow(
-                            Icons.location_city_outlined,
-                            "123, Main Street, Ahmedabad, Gujarat, India",
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-        _summaryCard(),
+        _warehouseCard(warehouse),
+        const SizedBox(height: 10),
+        _metrics(warehouse),
       ],
-    );
-  }
+    ),
+  );
 
-  Widget _desktopInfoCard() {
-    return Row(
-      spacing: 10,
-      children: [
-        Expanded(
-          flex: 2,
-          child: Card(
-            color: AppColors.surfaceColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppSize.borderRadius),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 6,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // round rect image
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          AppSize.borderRadius,
-                        ),
-                        // Adjust the roundness here
-                        child: Image.asset(
-                          Assets.images.wh.path,
-                          width: 250,
-                          height: 160,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 10,
-                        children: [
-                          Row(
-                            spacing: 10,
-                            children: [
-                              _header("Ahmedabad main Warehouse"),
-                              _status('Active'),
-                            ],
-                          ),
-                          Row(
-                            spacing: 10,
-                            children: [
-                              _infoRow(Icons.person, "MR. Patel"),
-                              _infoRow(Icons.phone_outlined, "+91 9876543210"),
-                              _infoRow(Icons.email_outlined, "abc@gmail.com"),
-                            ],
-                          ),
-                          // address info row
-                          _infoRow(
-                            Icons.location_city_outlined,
-                            "123, Main Street, Ahmedabad, Gujarat, India",
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            spacing: 10,
-                            children: [
-                              _sheetInfoItem(
-                                label: 'Available Sheets',
-                                value: "13",
-                              ),
-                              _sheetInfoItem(
-                                label: 'Available Hardware',
-                                value: "13",
-                              ),
-                              _sheetInfoItem(
-                                label: 'Available Pieces',
-                                value: "13",
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Expanded(flex: 1, child: _summaryCard()),
-      ],
-    );
-  }
-
-  Widget _mobileInfoCard() {
-    return Column(
-      spacing: 10,
-      children: [
-        Card(
-          color: AppColors.surfaceColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSize.borderRadius),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  spacing: 10,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(AppSize.borderRadius),
-                      // Adjust the roundness here
-                      child: Image.asset(
-                        Assets.images.wh.path,
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        spacing: 10,
-                        children: [
-                          _header("Ahmedabad main Warehouse"),
-                          _status('Active'),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 14),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 10,
-                  children: [
-                    Row(
-                      spacing: 10,
-                      children: [
-                        _infoRow(Icons.person, "MR. Patel"),
-                        _infoRow(Icons.phone_outlined, "+91 9876543210"),
-                      ],
-                    ),
-                    _infoRow(Icons.email_outlined, "abc@gmail.com"),
-
-                    _infoRow(
-                      Icons.location_city_outlined,
-                      "123, Main Street, Ahmedabad, Gujarat, India",
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-        _summaryCard(),
-      ],
-    );
-  }
-
-  Widget _summaryCard() {
+  Widget _warehouseCard(WarehouseModel warehouse) {
+    final statusLabel = _statusLabel(warehouse.status);
+    final statusColor = _statusColor(warehouse.status);
     return Card(
       color: AppColors.surfaceColor,
+      margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSize.borderRadius),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 6,
           children: [
-            _header("Summary"),
-            const SizedBox(height: 10),
-            Column(
-              spacing: 10,
+            Row(
               children: [
-                ItemSectionWidget(label: 'Available Sheets', value: "13"),
-                ItemSectionWidget(label: 'Available Hardware', value: "50"),
-                ItemSectionWidget(label: 'Available Pieces', value: "200"),
-                ItemSectionWidget(label: 'Available Hardware', value: "50"),
-                const SizedBox(height: 5),
+                const Icon(
+                  Icons.warehouse_outlined,
+                  color: AppColors.primaryColor,
+                  size: 23,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    warehouse.name,
+                    style: AppTextStyle.titleMedium.bold.copyWith(
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ),
+                _statusChip(statusLabel, statusColor),
+                IconButton(
+                  tooltip: 'Refresh warehouse details',
+                  visualDensity: VisualDensity.compact,
+                  onPressed: _loadWarehouse,
+                  icon: const Icon(Icons.refresh),
+                ),
               ],
+            ),
+            const SizedBox(height: 4),
+            Padding(
+              padding: const EdgeInsets.only(left: 33),
+              child: Text(
+                warehouse.factoryName.isEmpty
+                    ? 'Factory not available'
+                    : '${warehouse.factoryName}${warehouse.factoryCode == null ? '' : ' · ${warehouse.factoryCode}'}',
+                style: AppTextStyle.bodySmall.regular.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            const Divider(height: 1),
+            const SizedBox(height: 14),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final fieldWidth = constraints.maxWidth >= 650
+                    ? (constraints.maxWidth - 20) / 2
+                    : constraints.maxWidth;
+                return Wrap(
+                  spacing: 20,
+                  runSpacing: 12,
+                  children: [
+                    SizedBox(
+                      width: fieldWidth,
+                      child: _detailItem(
+                        Icons.location_on_outlined,
+                        'Location',
+                        _valueOrFallback(warehouse.location),
+                      ),
+                    ),
+                    SizedBox(
+                      width: fieldWidth,
+                      child: _detailItem(
+                        Icons.person_outline,
+                        'Contact person',
+                        _valueOrFallback(warehouse.contactName),
+                      ),
+                    ),
+                    SizedBox(
+                      width: fieldWidth,
+                      child: _detailItem(
+                        Icons.phone_outlined,
+                        'Phone',
+                        _valueOrFallback(warehouse.contactPhone),
+                      ),
+                    ),
+                    SizedBox(
+                      width: fieldWidth,
+                      child: _detailItem(
+                        Icons.email_outlined,
+                        'Email',
+                        _valueOrFallback(warehouse.contactEmail),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ),
@@ -335,93 +173,193 @@ class _WarehouseDetailPageState extends BaseState<WarehouseDetailPage> {
     );
   }
 
-  Widget _sheetInfoItem({
-    required String label,
-    required String value,
-    bool hasDivider = true,
-  }) {
-    return IntrinsicHeight(
+  Widget _metrics(WarehouseModel warehouse) {
+    final cards = [
+      _MetricData(
+        label: 'Inventory lines',
+        value: warehouse.inventoryBalanceCount,
+        icon: Icons.inventory_2_outlined,
+        color: const Color(0xFF7155D9),
+        detail: 'Material and hardware balances',
+      ),
+      _MetricData(
+        label: 'Physical sheets',
+        value: warehouse.sheetCount,
+        icon: Icons.view_agenda_outlined,
+        color: const Color(0xFF1684C7),
+        detail: 'Sheets stored at this warehouse',
+      ),
+    ];
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final cardWidth = constraints.maxWidth >= 500
+            ? (constraints.maxWidth - 10) / 2
+            : constraints.maxWidth;
+        return Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: cards
+              .map(
+                (metric) =>
+                    SizedBox(width: cardWidth, child: _metricCard(metric)),
+              )
+              .toList(),
+        );
+      },
+    );
+  }
+
+  Widget _metricCard(_MetricData metric) => Card(
+    color: AppColors.surfaceColor,
+    margin: EdgeInsets.zero,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(AppSize.borderRadius),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(14),
       child: Row(
-        spacing: 10,
         children: [
-          if (hasDivider)
-            VerticalDivider(
-              color: AppColors.dividerColor,
-              // Line color
-              thickness: 1,
-              // Thickness of the line
-              width: 3,
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: metric.color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
             ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: AppTextStyle.labelMedium.semiBold.copyWith(
-                  color: AppColors.textSecondary,
+            child: Icon(metric.icon, color: metric.color),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      '${metric.value}',
+                      style: AppTextStyle.titleMedium.bold.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        metric.label,
+                        style: AppTextStyle.bodySmall.semiBold.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Text(
-                value,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyle.labelMedium.semiBold.copyWith(
-                  color: AppColors.black,
+                Text(
+                  metric.detail,
+                  style: AppTextStyle.bodySmall.regular.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
 
-  Widget _status(String status) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.successColor.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        status,
-        style: TextStyle(
-          color: AppColors.successColor,
-          fontWeight: FontWeight.w600,
-          fontSize: 12,
+  Widget _detailItem(IconData icon, String label, String value) => Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Icon(icon, size: 17, color: AppColors.textSecondary),
+      const SizedBox(width: 8),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: AppTextStyle.bodySmall.semiBold.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+            Text(
+              value,
+              style: AppTextStyle.bodyMedium.regular.copyWith(
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ],
+  );
 
-  Widget _infoRow(IconData icon, String value) {
-    return Row(
-      children: [
-        Icon(icon, size: 16, color: AppColors.textSecondary),
-        const SizedBox(width: 6),
-        Text(
-          value,
-          style: AppTextStyle.labelMedium.regular.copyWith(
-            color: AppColors.textPrimary,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _header(String label) {
-    return Text(
+  Widget _statusChip(String label, Color color) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: Text(
       label,
-      style: AppTextStyle.labelLarge.bold.copyWith(
-        color: AppColors.textPrimary,
+      style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600),
+    ),
+  );
+
+  Widget _errorView({String? message}) => Center(
+    child: Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(
+            Icons.error_outline,
+            size: 42,
+            color: AppColors.errorColor,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            message ?? _error ?? 'Could not load warehouse details.',
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          ButtonWidget.primary(
+            label: 'Try Again',
+            icon: Icons.refresh,
+            onPressed: _loadWarehouse,
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
 
-  Widget _buildMobileLayout() {
-    return _mobileInfoCard();
-  }
+  String _valueOrFallback(String? value) =>
+      value == null || value.trim().isEmpty ? 'Not provided' : value;
 
-  Widget _buildDesktopLayout() {
-    return _desktopInfoCard();
-  }
+  String _statusLabel(WarehouseStatus status) => switch (status) {
+    WarehouseStatus.active => 'Active',
+    WarehouseStatus.inActive => 'Inactive',
+    WarehouseStatus.underMaintenance => 'Under Maintenance',
+  };
+
+  Color _statusColor(WarehouseStatus status) => switch (status) {
+    WarehouseStatus.active => AppColors.successColor,
+    WarehouseStatus.inActive => AppColors.errorColor,
+    WarehouseStatus.underMaintenance => AppColors.warningColor,
+  };
+}
+
+class _MetricData {
+  const _MetricData({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+    required this.detail,
+  });
+
+  final String label;
+  final int value;
+  final IconData icon;
+  final Color color;
+  final String detail;
 }

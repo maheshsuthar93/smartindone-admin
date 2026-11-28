@@ -56,6 +56,19 @@ class WarehouseRemoteDataSourceImpl implements WarehouseRemoteDataSource {
   }
 
   @override
+  Future<WarehouseModel> getWarehouseById({required String warehouseId}) async {
+    final response = await apiClient.get('/api/warehouses/$warehouseId');
+    final apiResponse = ApiResponse<WarehouseModel>.fromJson(
+      response.data,
+      (data) => WarehouseModel.fromJson(Map<String, dynamic>.from(data as Map)),
+    );
+    if (!apiResponse.success || apiResponse.data == null) {
+      throw Exception(apiResponse.message);
+    }
+    return apiResponse.data!;
+  }
+
+  @override
   Future<ApiResponse> updateWarehouse({
     required String warehouseId,
     required Map<String, dynamic> data,

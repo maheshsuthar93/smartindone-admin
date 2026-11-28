@@ -17,8 +17,28 @@ abstract class WarehouseModel with _$WarehouseModel {
     String? contactEmail,
     String? contactPhone,
     required WarehouseStatus status,
+    @Default('')
+    @JsonKey(readValue: _readFactoryName, includeToJson: false)
+    String factoryName,
+    @JsonKey(readValue: _readFactoryCode, includeToJson: false)
+    String? factoryCode,
+    @Default(0)
+    @JsonKey(readValue: _readInventoryBalanceCount, includeToJson: false)
+    int inventoryBalanceCount,
+    @Default(0)
+    @JsonKey(readValue: _readSheetCount, includeToJson: false)
+    int sheetCount,
   }) = _WarehouseModel;
 
   factory WarehouseModel.fromJson(Map<String, dynamic> json) =>
       _$WarehouseModelFromJson(json);
 }
+
+Object? _readFactoryName(Map json, String key) =>
+    (json['factory'] as Map?)?['name'];
+Object? _readFactoryCode(Map json, String key) =>
+    (json['factory'] as Map?)?['code'];
+Object? _readInventoryBalanceCount(Map json, String key) =>
+    (json['_count'] as Map?)?['inventory'];
+Object? _readSheetCount(Map json, String key) =>
+    (json['_count'] as Map?)?['sheets'];

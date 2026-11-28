@@ -124,7 +124,7 @@ class _WarehousesPageState extends BaseState<WarehousesPage> {
   }
 
   void _onView(WarehouseModel warehouse) {
-    WarehouseDetailPageRoute('1').push(context);
+    WarehouseDetailPageRoute(warehouse.id).push(context);
   }
 
   Future<void> _openWarehouseForm(

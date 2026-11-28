@@ -10,6 +10,8 @@ abstract class WarehouseRemoteDataSource {
     required int limit,
   });
 
+  Future<WarehouseModel> getWarehouseById({required String warehouseId});
+
   Future<ApiResponse> updateWarehouse({
     required String warehouseId,
     required Map<String, dynamic> data,
